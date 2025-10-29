@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🗨️ ConvoHelper - Conversation Analyzer</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="dark-theme">
+    <div id="app">
+        <!-- Initial Loading State -->
+        <div id="loading-screen" class="loading-screen">
+            <div class="loading-content">
+                <h1>🗨️ ConvoHelper</h1>
+                <div class="spinner"></div>
+                <p>Loading...</p>
+            </div>
+        </div>
+
+        <!-- Main Application -->
+        <div id="main-app" class="hidden">
+            <!-- Header -->
+            <header class="app-header">
+                <div class="header-content">
+                    <h1 class="app-title">🗨️ ConvoHelper</h1>
+                    <div class="header-controls">
+                        <select id="person-jumper" class="person-jumper hidden">
+                            <option value="">Jump to person...</option>
+                        </select>
+                        <button id="theme-toggle" class="btn-icon" title="Toggle theme">
+                            <span class="theme-icon">☀️</span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="app-main">
+                <!-- Page: Upload -->
+                <div id="page-upload" class="page active">
+                    <div class="page-content">
+                        <div class="upload-section">
+                            <h2 class="section-title">📁 Upload Your Data</h2>
+                            <p class="section-subtitle">Drop your conversation JSON file to get started!</p>
+                            
+                            <div id="drop-zone" class="drop-zone">
+                                <input type="file" id="file-input" accept=".json" hidden>
+                                <div class="drop-zone-content">
+                                    <div class="drop-icon">📁</div>
+                                    <p class="drop-text">Drag & drop your JSON file here</p>
+                                    <p class="drop-or">or</p>
+                                    <button id="btn-choose-file" class="btn btn-primary">
+                                        Choose File
+                                    </button>
+                                    <p class="drop-hint">Supports files up to 50MB</p>
+                                </div>
+                            </div>
+
+                            <div id="upload-status" class="upload-status hidden"></div>
+                            
+                            <div id="identity-selector" class="identity-selector hidden">
+                                <h3 class="selector-title">👤 Select Your Identity</h3>
+                                <p class="selector-subtitle">Choose which sender name represents you in the conversations</p>
+                                <select id="identity-select" class="identity-select">
+                                    <option value="">-- Select your identity --</option>
+                                </select>
+                                <p class="selector-hint">This will be used to calculate "You vs Them" statistics</p>
+                            </div>
+                            
+                            <div id="upload-actions" class="upload-actions hidden">
+                                <button id="btn-process" class="btn btn-primary btn-large">
+                                    ✨ Process Data
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page: Processing -->
+                <div id="page-processing" class="page">
+                    <div class="page-content">
+                        <div class="processing-section">
+                            <h2 class="section-title">⚙️ Processing Your Conversations</h2>
+                            <p class="section-subtitle">This may take a moment for large files...</p>
+                            
+                            <div class="progress-container">
+                                <div class="progress-bar">
+                                    <div id="progress-fill" class="progress-fill"></div>
+                                </div>
+                                <p id="progress-text" class="progress-text">0%</p>
+                            </div>
+
+                            <div id="processing-steps" class="processing-steps">
+                                <div class="step" data-step="parse">
+                                    <span class="step-icon">⏳</span>
+                                    <span class="step-text">Parsing JSON data...</span>
+                                </div>
+                                <div class="step" data-step="extract">
+                                    <span class="step-icon">⏳</span>
+                                    <span class="step-text">Extracting messages...</span>
+                                </div>
+                                <div class="step" data-step="cluster">
+                                    <span class="step-icon">⏳</span>
+                                    <span class="step-text">Clustering by weeks...</span>
+                                </div>
+                                <div class="step" data-step="group">
+                                    <span class="step-icon">⏳</span>
+                                    <span class="step-text">Grouping into months...</span>
+                                </div>
+                                <div class="step" data-step="stats">
+                                    <span class="step-icon">⏳</span>
+                                    <span class="step-text">Generating statistics...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page: Overview -->
+                <div id="page-overview" class="page">
+                    <div class="page-content">
+                        <h2 class="section-title">📊 Overview Statistics</h2>
+                        
+                        <div class="stats-cards">
+                            <div class="stat-card">
+                                <div class="stat-icon">💬</div>
+                                <div class="stat-info">
+                                    <div class="stat-label">Total Messages</div>
+                                    <div id="stat-total-messages" class="stat-value">0</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">👥</div>
+                                <div class="stat-info">
+                                    <div class="stat-label">Conversations</div>
+                                    <div id="stat-total-convos" class="stat-value">0</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">📅</div>
+                                <div class="stat-info">
+                                    <div class="stat-label">Date Range</div>
+                                    <div id="stat-date-range" class="stat-value">-</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chart-section">
+                            <h3 class="chart-title">📈 Messages Over Time</h3>
+                            <div class="chart-container">
+                                <canvas id="chart-timeline"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-section">
+                            <h3 class="chart-title">🏆 Top Conversations</h3>
+                            <p class="chart-subtitle">Click any name to view details</p>
+                            <div id="top-conversations" class="top-conversations"></div>
+                        </div>
+
+                        <div class="chart-section">
+                            <h3 class="chart-title">🥧 Message Distribution</h3>
+                            <div class="chart-container chart-container-small">
+                                <canvas id="chart-distribution"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Enhanced Analytics Sections -->
+                        <div class="chart-section">
+                            <h3 class="chart-title">📅 Activity by Day of Week</h3>
+                            <div class="chart-container">
+                                <canvas id="chart-day-of-week"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-section">
+                            <h3 class="chart-title">🎯 Peak Activity</h3>
+                            <div class="stats-cards">
+                                <div class="stat-card">
+                                    <div class="stat-icon">🕐</div>
+                                    <div class="stat-info">
+                                        <div class="stat-label">Peak Hour</div>
+                                        <div id="peak-hour" class="stat-value">-</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">📅</div>
+                                    <div class="stat-info">
+                                        <div class="stat-label">Peak Day</div>
+                                        <div id="peak-day" class="stat-value">-</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">📆</div>
+                                    <div class="stat-info">
+                                        <div class="stat-label">Peak Month</div>
+                                        <div id="peak-month" class="stat-value">-</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">⚡</div>
+                                    <div class="stat-info">
+                                        <div class="stat-label">Msg Velocity</div>
+                                        <div id="msg-velocity" class="stat-value">-</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chart-section">
+                            <h3 class="chart-title">💬 Content Types</h3>
+                            <div class="chart-container chart-container-small">
+                                <canvas id="chart-content-types"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-section">
+                            <h3 class="chart-title">📏 Message Lengths</h3>
+                            <div class="chart-container chart-container-small">
+                                <canvas id="chart-msg-lengths"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-section">
+                            <h3 class="chart-title">⚖️ Conversation Balance</h3>
+                            <p class="chart-subtitle">How balanced is each conversation? (50% = perfectly balanced)</p>
+                            <div class="chart-container">
+                                <canvas id="chart-balance"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-section">
+                            <h3 class="chart-title">📊 Conversation Density</h3>
+                            <p class="chart-subtitle">Messages per day (relative to most active conversation)</p>
+                            <div class="chart-container">
+                                <canvas id="chart-density"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-section">
+                            <h3 class="chart-title">🔥 Activity Heatmap - Hour × Day of Week</h3>
+                            <p class="chart-subtitle">Message distribution by hour and day (bubble size = message count)</p>
+                            <div class="chart-container chart-container-heatmap">
+                                <canvas id="chart-heatmap-hour-day"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-section">
+                            <h3 class="chart-title">📆 Activity Heatmap - Day × Month</h3>
+                            <p class="chart-subtitle">Message distribution by day of month across all months</p>
+                            <div class="chart-container chart-container-heatmap">
+                                <canvas id="chart-heatmap-month-day"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-section">
+                            <h3 class="chart-title">🔥 Activity Categories</h3>
+                            <div id="activity-categories" class="activity-categories"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page: Individual -->
+                <div id="page-individual" class="page">
+                    <div class="page-content">
+                        <div class="page-nav">
+                            <button id="btn-back-overview" class="btn btn-secondary">
+                                ← Back to Overview
+                            </button>
+                            <select id="person-switcher" class="person-switcher">
+                                <option value="">Select person...</option>
+                            </select>
+                        </div>
+
+                        <div class="individual-header">
+                            <h2 id="individual-name" class="individual-name">👤 Person Name</h2>
+                        </div>
+
+                        <div class="stats-cards">
+                            <div class="stat-card">
+                                <div class="stat-icon">💬</div>
+                                <div class="stat-info">
+                                    <div class="stat-label">Total Messages</div>
+                                    <div id="ind-total-messages" class="stat-value">0</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">📊</div>
+                                <div class="stat-info">
+                                    <div class="stat-label">Percentage</div>
+                                    <div id="ind-percentage" class="stat-value">0%</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">📅</div>
+                                <div class="stat-info">
+                                    <div class="stat-label">Avg per Day</div>
+                                    <div id="ind-avg-day" class="stat-value">0</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chart-section">
+                            <h3 class="chart-title">📊 Messages by Month</h3>
+                            <div class="chart-container">
+                                <canvas id="chart-by-month"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-section">
+                            <h3 class="chart-title">🕐 Activity by Hour</h3>
+                            <div class="chart-container">
+                                <canvas id="chart-by-hour"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Enhanced Individual Analytics -->
+                        <div class="chart-section">
+                            <h3 class="chart-title">⚡ Response Times</h3>
+                            <div class="stats-cards">
+                                <div class="stat-card">
+                                    <div class="stat-icon">🫵</div>
+                                    <div class="stat-info">
+                                        <div class="stat-label">Your Avg Response</div>
+                                        <div id="your-avg-response" class="stat-value">-</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">👤</div>
+                                    <div class="stat-info">
+                                        <div class="stat-label">Their Avg Response</div>
+                                        <div id="their-avg-response" class="stat-value">-</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chart-section">
+                            <h3 class="chart-title">⚖️ Conversation Balance</h3>
+                            <div class="stats-cards">
+                                <div class="stat-card">
+                                    <div class="stat-icon">🎯</div>
+                                    <div class="stat-info">
+                                        <div class="stat-label">Balance Score</div>
+                                        <div id="balance-score" class="stat-value">-</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">🫵</div>
+                                    <div class="stat-info">
+                                        <div class="stat-label">You</div>
+                                        <div id="you-percentage" class="stat-value">-</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">👤</div>
+                                    <div class="stat-info">
+                                        <div class="stat-label">Them</div>
+                                        <div id="them-percentage" class="stat-value">-</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chart-section">
+                            <h3 class="chart-title">🚀 Conversation Initiator</h3>
+                            <div class="stats-cards">
+                                <div class="stat-card">
+                                    <div class="stat-icon">🫵</div>
+                                    <div class="stat-info">
+                                        <div class="stat-label">You Initiated</div>
+                                        <div id="you-initiated" class="stat-value">-</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">👤</div>
+                                    <div class="stat-info">
+                                        <div class="stat-label">They Initiated</div>
+                                        <div id="them-initiated" class="stat-value">-</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chart-section">
+                            <h3 class="chart-title">🔥 Streaks & Gaps</h3>
+                            <div class="stats-cards">
+                                <div class="stat-card">
+                                    <div class="stat-icon">⚡</div>
+                                    <div class="stat-info">
+                                        <div class="stat-label">Current Streak</div>
+                                        <div id="current-streak" class="stat-value">-</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">🏆</div>
+                                    <div class="stat-info">
+                                        <div class="stat-label">Longest Streak</div>
+                                        <div id="longest-streak" class="stat-value">-</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">😴</div>
+                                    <div class="stat-info">
+                                        <div class="stat-label">Longest Gap</div>
+                                        <div id="longest-gap" class="stat-value">-</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chart-section">
+                            <h3 class="chart-title">📝 Message Profile</h3>
+                            <div class="stats-cards">
+                                <div class="stat-card">
+                                    <div class="stat-icon">📏</div>
+                                    <div class="stat-info">
+                                        <div class="stat-label">Avg Words/Message</div>
+                                        <div id="avg-words" class="stat-value">-</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">📈</div>
+                                    <div class="stat-info">
+                                        <div class="stat-label">Activity Trend</div>
+                                        <div id="activity-trend" class="stat-value">-</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chart-section">
+                            <h3 class="chart-title">📅 Day of Week Preference</h3>
+                            <div class="chart-container">
+                                <canvas id="chart-ind-day-of-week"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-section">
+                            <h3 class="chart-title">💬 Content Types</h3>
+                            <div class="chart-container chart-container-small">
+                                <canvas id="chart-ind-content-types"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-section">
+                            <h3 class="chart-title">📏 Message Lengths</h3>
+                            <div class="chart-container chart-container-small">
+                                <canvas id="chart-ind-msg-lengths"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-section">
+                            <h3 class="chart-title">🎉 Milestones</h3>
+                            <div id="milestones-list" class="milestones-list"></div>
+                        </div>
+
+                        <div class="chart-section">
+                            <h3 class="chart-title">💥 Message Bursts</h3>
+                            <p class="chart-subtitle">Rapid message exchanges (5+ messages within 30 minutes)</p>
+                            <div id="message-bursts-list" class="bursts-list"></div>
+                        </div>
+
+                        <div class="timeline-section">
+                            <h3 class="chart-title">📅 Timeline</h3>
+                            <p class="chart-subtitle">Click months to expand/collapse weeks</p>
+                            <div id="timeline-container" class="timeline-container"></div>
+                        </div>
+
+                        <div class="export-button-section">
+                            <button id="btn-goto-export" class="btn btn-primary btn-large">
+                                💾 Export This Conversation
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page: Export -->
+                <div id="page-export" class="page">
+                    <div class="page-content">
+                        <div class="page-nav">
+                            <button id="btn-back-individual" class="btn btn-secondary">
+                                ← Back
+                            </button>
+                        </div>
+
+                        <h2 class="section-title">💾 Export Conversation</h2>
+                        <p id="export-person-name" class="section-subtitle">Select what to export</p>
+
+                        <div class="export-section">
+                            <h3 class="export-section-title">📅 Select Time Periods</h3>
+                            <p class="export-hint">Check months to select all weeks, or expand to select individual weeks</p>
+                            <div id="export-timeline" class="export-timeline"></div>
+                        </div>
+
+                        <div class="export-summary">
+                            <h3 class="export-section-title">📊 Selection Summary</h3>
+                            <div class="summary-stats">
+                                <div class="summary-stat">
+                                    <span class="summary-label">Weeks selected:</span>
+                                    <span id="summary-weeks" class="summary-value">0</span>
+                                </div>
+                                <div class="summary-stat">
+                                    <span class="summary-label">Total messages:</span>
+                                    <span id="summary-messages" class="summary-value">0</span>
+                                </div>
+                                <div class="summary-stat">
+                                    <span class="summary-label">Files to create:</span>
+                                    <span id="summary-files" class="summary-value">0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="export-actions">
+                            <button id="btn-preview" class="btn btn-secondary">
+                                📄 Preview
+                            </button>
+                            <button id="btn-export" class="btn btn-primary btn-large">
+                                💾 Download Export
+                            </button>
+                        </div>
+
+                        <div id="preview-container" class="preview-container hidden">
+                            <h3 class="export-section-title">📄 Preview</h3>
+                            <div id="preview-content" class="preview-content"></div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Footer -->
+            <footer class="app-footer">
+                <p>Made with ❤️ using ConvoHelper Standalone Edition</p>
+                <p class="footer-links">
+                    <a href="README.md" target="_blank">Documentation</a> •
+                    <a href="USAGE.md" target="_blank">Usage Guide</a> •
+                    <a href="DATA_FORMAT.md" target="_blank">Data Format</a>
+                </p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Message Toast -->
+    <div id="toast" class="toast hidden">
+        <span id="toast-message"></span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="libs/chart.min.js"></script>
+    <script src="libs/marked.min.js"></script>
+    <script src="libs/jszip.min.js"></script>
+    <script src="js/parser.js"></script>
+    <script src="js/processor.js"></script>
+    <script src="js/stats.js"></script>
+    <script src="js/stats-general.js"></script>
+    <script src="js/stats-individual.js"></script>
+    <script src="js/stats-comparative.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/charts-heatmap.js"></script>
+    <script src="js/exporter.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

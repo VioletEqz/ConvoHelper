@@ -1,0 +1,353 @@
+{
+  "Direct Message": {
+    "Direct Messages": {
+      "ChatHistory": {
+        "Chat History with alice_wonder:": [
+          {
+            "Date": "2025-10-01 09:15:30",
+            "From": "alice_wonder",
+            "Content": "Good morning! ☀️"
+          },
+          {
+            "Date": "2025-10-01 09:20:45",
+            "From": "you",
+            "Content": "Morning Alice! How are you?"
+          },
+          {
+            "Date": "2025-10-01 09:25:12",
+            "From": "alice_wonder",
+            "Content": "I'm great! Want to grab coffee later?"
+          },
+          {
+            "Date": "2025-10-01 14:30:00",
+            "From": "you",
+            "Content": "Sure! 3pm works?"
+          },
+          {
+            "Date": "2025-10-01 14:31:22",
+            "From": "alice_wonder",
+            "Content": "Perfect! See you then 😊"
+          },
+          {
+            "Date": "2025-10-08 18:45:10",
+            "From": "alice_wonder",
+            "Content": "Hey! How was your weekend?"
+          },
+          {
+            "Date": "2025-10-08 18:50:33",
+            "From": "you",
+            "Content": "It was amazing! Went hiking 🏔️"
+          },
+          {
+            "Date": "2025-10-08 18:52:15",
+            "From": "alice_wonder",
+            "Content": "[https://example.com/hiking-photo.jpg]"
+          },
+          {
+            "Date": "2025-10-08 18:53:00",
+            "From": "you",
+            "Content": "Nice! Where was this taken?"
+          },
+          {
+            "Date": "2025-10-08 18:55:42",
+            "From": "alice_wonder",
+            "Content": "Mount Rainier! We should go together sometime"
+          },
+          {
+            "Date": "2025-10-15 12:20:18",
+            "From": "alice_wonder",
+            "Content": "Lunch plans today?"
+          },
+          {
+            "Date": "2025-10-15 12:25:00",
+            "From": "you",
+            "Content": "Already ate, sorry! Tomorrow?"
+          },
+          {
+            "Date": "2025-10-15 12:26:33",
+            "From": "alice_wonder",
+            "Content": "Sounds good! 👍"
+          },
+          {
+            "Date": "2025-10-22 20:15:45",
+            "From": "alice_wonder",
+            "Content": "Did you see the new movie trailer?"
+          },
+          {
+            "Date": "2025-10-22 20:18:22",
+            "From": "you",
+            "Content": "Not yet! Which one?"
+          },
+          {
+            "Date": "2025-10-22 20:19:00",
+            "From": "alice_wonder",
+            "Content": "[https://youtube.com/trailer123]"
+          },
+          {
+            "Date": "2025-10-22 20:25:30",
+            "From": "you",
+            "Content": "Wow that looks incredible!"
+          },
+          {
+            "Date": "2025-10-22 20:26:15",
+            "From": "alice_wonder",
+            "Content": "Right?! Want to see it this weekend?"
+          },
+          {
+            "Date": "2025-10-22 20:28:00",
+            "From": "you",
+            "Content": "Definitely! Saturday evening?"
+          },
+          {
+            "Date": "2025-10-22 20:29:12",
+            "From": "alice_wonder",
+            "Content": "Perfect! I'll book tickets 🎬"
+          }
+        ],
+        "Chat History with bob_builder:": [
+          {
+            "Date": "2025-10-03 10:00:00",
+            "From": "bob_builder",
+            "Content": "Hey! Quick question about the project"
+          },
+          {
+            "Date": "2025-10-03 10:05:30",
+            "From": "you",
+            "Content": "Sure, what's up?"
+          },
+          {
+            "Date": "2025-10-03 10:10:15",
+            "From": "bob_builder",
+            "Content": "Can we move the deadline to next week?"
+          },
+          {
+            "Date": "2025-10-03 10:15:00",
+            "From": "you",
+            "Content": "Let me check with the team"
+          },
+          {
+            "Date": "2025-10-03 15:30:22",
+            "From": "you",
+            "Content": "Team says it's okay! New deadline: Oct 10"
+          },
+          {
+            "Date": "2025-10-03 15:32:45",
+            "From": "bob_builder",
+            "Content": "Awesome, thanks! 🙏"
+          },
+          {
+            "Date": "2025-10-10 09:00:00",
+            "From": "bob_builder",
+            "Content": "Project is done! Sending files now"
+          },
+          {
+            "Date": "2025-10-10 09:05:12",
+            "From": "bob_builder",
+            "Content": "[https://drive.google.com/files/project]"
+          },
+          {
+            "Date": "2025-10-10 10:30:00",
+            "From": "you",
+            "Content": "Looks great! Well done 👏"
+          },
+          {
+            "Date": "2025-10-10 10:32:18",
+            "From": "bob_builder",
+            "Content": "Thanks! Ready for the next one"
+          }
+        ],
+        "Chat History with charlie_cat:": [
+          {
+            "Date": "2025-10-05 16:20:00",
+            "From": "charlie_cat",
+            "Content": "Look at this cute cat! 🐱"
+          },
+          {
+            "Date": "2025-10-05 16:21:30",
+            "From": "charlie_cat",
+            "Content": "[https://media.tenor.com/cute-cat.gif]"
+          },
+          {
+            "Date": "2025-10-05 16:25:00",
+            "From": "you",
+            "Content": "OMG so adorable!! 😍"
+          },
+          {
+            "Date": "2025-10-05 16:27:45",
+            "From": "charlie_cat",
+            "Content": "Right?! I want one"
+          },
+          {
+            "Date": "2025-10-12 11:00:00",
+            "From": "charlie_cat",
+            "Content": "Guess what..."
+          },
+          {
+            "Date": "2025-10-12 11:02:30",
+            "From": "you",
+            "Content": "What?? 👀"
+          },
+          {
+            "Date": "2025-10-12 11:05:00",
+            "From": "charlie_cat",
+            "Content": "I ADOPTED A CAT! 🎉"
+          },
+          {
+            "Date": "2025-10-12 11:06:15",
+            "From": "you",
+            "Content": "NO WAY!! Show me pics!"
+          },
+          {
+            "Date": "2025-10-12 11:08:30",
+            "From": "charlie_cat",
+            "Content": "[https://example.com/mycat1.jpg]"
+          },
+          {
+            "Date": "2025-10-12 11:09:00",
+            "From": "charlie_cat",
+            "Content": "[https://example.com/mycat2.jpg]"
+          },
+          {
+            "Date": "2025-10-12 11:10:45",
+            "From": "you",
+            "Content": "So precious!! What's the name?"
+          },
+          {
+            "Date": "2025-10-12 11:12:00",
+            "From": "charlie_cat",
+            "Content": "Mr. Whiskers! 😊"
+          },
+          {
+            "Date": "2025-10-19 14:30:00",
+            "From": "charlie_cat",
+            "Content": "Mr. Whiskers says hi!"
+          },
+          {
+            "Date": "2025-10-19 14:31:22",
+            "From": "charlie_cat",
+            "Content": "[https://media.tenor.com/cat-wave.gif]"
+          },
+          {
+            "Date": "2025-10-19 14:35:00",
+            "From": "you",
+            "Content": "Haha! Hi Mr. Whiskers! 👋"
+          }
+        ],
+        "Chat History with diana_dev:": [
+          {
+            "Date": "2025-10-02 13:15:00",
+            "From": "diana_dev",
+            "Content": "Code review ready!"
+          },
+          {
+            "Date": "2025-10-02 13:20:30",
+            "From": "you",
+            "Content": "I'll take a look now"
+          },
+          {
+            "Date": "2025-10-02 14:00:00",
+            "From": "you",
+            "Content": "Left some comments on lines 42-55"
+          },
+          {
+            "Date": "2025-10-02 14:15:45",
+            "From": "diana_dev",
+            "Content": "Fixed! Thanks for the feedback"
+          },
+          {
+            "Date": "2025-10-09 10:30:00",
+            "From": "diana_dev",
+            "Content": "New feature branch pushed"
+          },
+          {
+            "Date": "2025-10-09 10:35:22",
+            "From": "you",
+            "Content": "Merging to main 🚀"
+          },
+          {
+            "Date": "2025-10-16 15:45:00",
+            "From": "diana_dev",
+            "Content": "Bug fix deployed"
+          },
+          {
+            "Date": "2025-10-16 15:50:30",
+            "From": "you",
+            "Content": "Confirmed working! Great job 💪"
+          },
+          {
+            "Date": "2025-10-23 09:00:00",
+            "From": "diana_dev",
+            "Content": "Sprint planning at 2pm today"
+          },
+          {
+            "Date": "2025-10-23 09:05:15",
+            "From": "you",
+            "Content": "I'll be there!"
+          }
+        ],
+        "Chat History with emma_music:": [
+          {
+            "Date": "2025-10-04 19:00:00",
+            "From": "emma_music",
+            "Content": "Check out this song! 🎵"
+          },
+          {
+            "Date": "2025-10-04 19:01:30",
+            "From": "emma_music",
+            "Content": "[https://spotify.com/track/abc123]"
+          },
+          {
+            "Date": "2025-10-04 19:15:00",
+            "From": "you",
+            "Content": "Love it! Adding to playlist"
+          },
+          {
+            "Date": "2025-10-11 20:30:00",
+            "From": "emma_music",
+            "Content": "Concert tickets on sale!"
+          },
+          {
+            "Date": "2025-10-11 20:35:45",
+            "From": "you",
+            "Content": "Which band?"
+          },
+          {
+            "Date": "2025-10-11 20:37:00",
+            "From": "emma_music",
+            "Content": "Arctic Monkeys! November 15"
+          },
+          {
+            "Date": "2025-10-11 20:40:22",
+            "From": "you",
+            "Content": "I'm in! Let's get tickets"
+          },
+          {
+            "Date": "2025-10-11 20:42:00",
+            "From": "emma_music",
+            "Content": "Got 2 tickets! 🎸"
+          },
+          {
+            "Date": "2025-10-18 17:00:00",
+            "From": "emma_music",
+            "Content": "Making a pre-concert playlist"
+          },
+          {
+            "Date": "2025-10-18 17:05:30",
+            "From": "you",
+            "Content": "Share it with me!"
+          },
+          {
+            "Date": "2025-10-18 17:10:00",
+            "From": "emma_music",
+            "Content": "[https://spotify.com/playlist/concert2025]"
+          },
+          {
+            "Date": "2025-10-18 17:15:45",
+            "From": "you",
+            "Content": "This is perfect! 🎶"
+          }
+        ]
+      }
+    }
+  }
+}

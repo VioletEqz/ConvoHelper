@@ -1,0 +1,104 @@
+# Operating System Files
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+.directory
+*~
+.fuse_hidden*
+.nfs*
+
+# Editor and IDE Configuration
+# VSCode
+.vscode/
+*.code-workspace
+
+# JetBrains IDEs (WebStorm, IntelliJ, etc.)
+.idea/
+*.iml
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+*.swp
+*.swo
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+auto-save-list
+tramp
+.\#*
+
+# Logs and Temporary Files
+*.log
+*.tmp
+*.temp
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# User-Generated Data Files
+# Conversation data files uploaded by users (exclude from root only)
+/*.json
+# But keep example files
+!examples/**/*.json
+
+# Exported Files and Archives
+exports/
+*.zip
+*.tar.gz
+downloads/
+
+# Node.js (future-proofing)
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# Build Output (future-proofing)
+dist/
+build/
+out/
+.cache/
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+
+# Testing
+coverage/
+*.test.js.snap
+.nyc_output/
+
+# Misc
+*.bak
+*.backup
+*.old
+.sass-cache/
+task_docs/

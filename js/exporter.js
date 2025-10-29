@@ -60,7 +60,7 @@ const Exporter = {
             for (const msg of byDate[date]) {
                 const time = `${String(msg.hour).padStart(2, '0')}:${String(msg.date.getMinutes()).padStart(2, '0')}:${String(msg.date.getSeconds()).padStart(2, '0')}`;
                 md += `**${time}** - [**${msg.from}**]: `;
-                md += `${msg.content}\n`;
+                md += `${msg.content}\n\n`;
             }
         }
         

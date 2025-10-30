@@ -344,6 +344,80 @@ const UI = {
         if (enhanced.messageBursts) {
             this.populateMessageBursts(enhanced.messageBursts);
         }
+        
+        // Render advanced visualizations
+        this.renderAdvancedVisualizations(this.currentPerson);
+    },
+    
+    /**
+     * Render advanced D3 visualizations
+     * @param {string} personName - Person name
+     */
+    renderAdvancedVisualizations(personName) {
+        const data = window.appData.processed;
+        
+        // Render word cloud with controls
+        const wordcloudContainer = document.getElementById('viz-wordcloud-container');
+        if (wordcloudContainer && VizWordCloud) {
+            this.setupWordCloudControls(personName, data);
+            this.renderWordCloud(personName, data);
+        }
+        
+        // Render calendar heatmap
+        const calendarContainer = document.getElementById('viz-calendar-container');
+        if (calendarContainer && VizCalendar) {
+            VizCalendar.render(calendarContainer, personName, { byPerson: data });
+        }
+        
+        // Render conversation flow
+        const flowContainer = document.getElementById('viz-flow-container');
+        if (flowContainer && VizFlow) {
+            VizFlow.render(flowContainer, personName, { byPerson: data });
+        }
+    },
+    
+    /**
+     * Setup word cloud controls
+     * @param {string} personName - Person name
+     * @param {Object} data - Processed data
+     */
+    setupWordCloudControls(personName, data) {
+        const refreshBtn = document.getElementById('wordcloud-refresh');
+        const includePhrases = document.getElementById('wordcloud-include-phrases');
+        const ngramSize = document.getElementById('wordcloud-ngram-size');
+        const minOccurrence = document.getElementById('wordcloud-min-occurrence');
+        const maxWords = document.getElementById('wordcloud-max-words');
+        
+        // Remove existing listeners
+        const newRefreshBtn = refreshBtn.cloneNode(true);
+        refreshBtn.parentNode.replaceChild(newRefreshBtn, refreshBtn);
+        
+        // Add click listener to refresh button
+        newRefreshBtn.addEventListener('click', () => {
+            this.renderWordCloud(personName, data);
+        });
+    },
+    
+    /**
+     * Render word cloud with current options
+     * @param {string} personName - Person name
+     * @param {Object} data - Processed data
+     */
+    renderWordCloud(personName, data) {
+        const wordcloudContainer = document.getElementById('viz-wordcloud-container');
+        const includePhrases = document.getElementById('wordcloud-include-phrases');
+        const ngramSize = document.getElementById('wordcloud-ngram-size');
+        const minOccurrence = document.getElementById('wordcloud-min-occurrence');
+        const maxWords = document.getElementById('wordcloud-max-words');
+        
+        const options = {
+            includePhrases: includePhrases.checked,
+            ngramSize: parseInt(ngramSize.value),
+            minPhraseOccurrence: parseInt(minOccurrence.value),
+            maxWords: parseInt(maxWords.value)
+        };
+        
+        VizWordCloud.render(wordcloudContainer, personName, { byPerson: data }, options);
     },
     
     /**

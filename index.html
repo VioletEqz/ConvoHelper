@@ -24,6 +24,9 @@
                 <div class="header-content">
                     <h1 class="app-title">🗨️ ConvoHelper</h1>
                     <div class="header-controls">
+                        <select id="timezone-select" class="timezone-select" title="Timezone">
+                            <option value="auto">Auto (GMT+0)</option>
+                        </select>
                         <select id="person-jumper" class="person-jumper hidden">
                             <option value="">Jump to person...</option>
                         </select>
@@ -120,6 +123,42 @@
                 <div id="page-overview" class="page">
                     <div class="page-content">
                         <h2 class="section-title">📊 Overview Statistics</h2>
+                        
+                        <!-- Date Range Filter Bar -->
+                        <div class="stats-filter-bar">
+                            <div class="filter-group">
+                                <label>View:</label>
+                                <div class="btn-group">
+                                    <button class="filter-btn active" data-view="all">All Time</button>
+                                    <button class="filter-btn" data-view="month">By Month</button>
+                                    <button class="filter-btn" data-view="week">By Week</button>
+                                    <button class="filter-btn" data-view="custom">Custom Range</button>
+                                </div>
+                            </div>
+                            <div class="filter-group hidden" id="period-selector">
+                                <select id="period-select">
+                                    <option value="">Select period...</option>
+                                </select>
+                            </div>
+                            <div class="date-range-picker hidden" id="custom-range">
+                                <div class="quick-presets">
+                                    <button class="preset-btn" data-preset="7">Last 7 days</button>
+                                    <button class="preset-btn" data-preset="30">Last 30 days</button>
+                                    <button class="preset-btn" data-preset="90">Last 90 days</button>
+                                    <button class="preset-btn" data-preset="year">This Year</button>
+                                </div>
+                                <div class="custom-dates">
+                                    <input type="date" id="range-start" />
+                                    <span>to</span>
+                                    <input type="date" id="range-end" />
+                                    <button id="apply-range" class="btn btn-primary btn-sm">Apply</button>
+                                </div>
+                            </div>
+                            <div class="active-filter-indicator hidden" id="active-filter">
+                                <span id="filter-description"></span>
+                                <button id="clear-filter" class="btn-clear">✕</button>
+                            </div>
+                        </div>
                         
                         <div class="stats-cards">
                             <div class="stat-card">
@@ -461,6 +500,52 @@
                             <div id="message-bursts-list" class="bursts-list"></div>
                         </div>
 
+                        <!-- Advanced Visualizations -->
+                        <div class="chart-section">
+                            <h3 class="chart-title">☁️ Word Cloud</h3>
+                            <p class="chart-subtitle">Most frequently used words in this conversation</p>
+                            
+                            <div class="viz-controls">
+                                <div class="control-group">
+                                    <label class="control-label">
+                                        <input type="checkbox" id="wordcloud-include-phrases" checked>
+                                        Include Phrases
+                                    </label>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">N-gram Size:</label>
+                                    <select id="wordcloud-ngram-size" class="control-select">
+                                        <option value="2">2-grams (e.g., "thank you")</option>
+                                        <option value="3">3-grams (e.g., "i love you")</option>
+                                        <option value="4">4-grams</option>
+                                    </select>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Min Occurrences:</label>
+                                    <input type="number" id="wordcloud-min-occurrence" min="1" max="20" value="3" class="control-input">
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Max Words:</label>
+                                    <input type="number" id="wordcloud-max-words" min="20" max="200" value="100" step="10" class="control-input">
+                                </div>
+                                <button id="wordcloud-refresh" class="btn btn-sm btn-secondary">↻ Refresh</button>
+                            </div>
+                            
+                            <div id="viz-wordcloud-container" class="viz-container"></div>
+                        </div>
+
+                        <div class="chart-section">
+                            <h3 class="chart-title">📅 Activity Calendar</h3>
+                            <p class="chart-subtitle">Daily message activity heatmap</p>
+                            <div id="viz-calendar-container" class="viz-container"></div>
+                        </div>
+
+                        <div class="chart-section">
+                            <h3 class="chart-title">🔄 Conversation Flow</h3>
+                            <p class="chart-subtitle">Message exchange patterns over time</p>
+                            <div id="viz-flow-container" class="viz-container"></div>
+                        </div>
+
                         <div class="timeline-section">
                             <h3 class="chart-title">📅 Timeline</h3>
                             <p class="chart-subtitle">Click months to expand/collapse weeks</p>
@@ -546,6 +631,7 @@
     </div>
 
     <!-- Scripts -->
+    <script src="libs/d3.min.js"></script>
     <script src="libs/chart.min.js"></script>
     <script src="libs/marked.min.js"></script>
     <script src="libs/jszip.min.js"></script>
@@ -558,6 +644,13 @@
     <script src="js/charts.js"></script>
     <script src="js/charts-heatmap.js"></script>
     <script src="js/exporter.js"></script>
+    <script src="js/date-range-filter.js"></script>
+    <script src="js/viz-utils.js"></script>
+    <script src="js/viz-calendar.js"></script>
+    <script src="js/viz-wordcloud.js"></script>
+    <script src="js/viz-timeline.js"></script>
+    <script src="js/viz-flow.js"></script>
+    <script src="js/viz-privacy.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/app.js"></script>
 </body>

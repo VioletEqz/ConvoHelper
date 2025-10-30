@@ -1,104 +1,93 @@
-# Operating System Files
-# macOS
+# OS Files
 .DS_Store
-.AppleDouble
-.LSOverride
+.DS_Store?
 ._*
 .Spotlight-V100
 .Trashes
+ehthumbs.db
+Thumbs.db
+*~
+
+# Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*.bak
+*.tmp
+*.temp
+
+# Node modules (if using npm for any tooling)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Logs
+logs/
+*.log
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Build outputs (if adding build process)
+dist/
+build/
+out/
+
+# Coverage reports
+coverage/
+.nyc_output/
+
+# Test data (keep examples but ignore large test files)
+test-data/
+*.large.json
+
+# User uploaded data files
+data/
+!data/stopwords.txt
+uploads/
+user-data/
+
+# Backup files
+*.backup
+backups/
+
+# System files
+*.pid
+*.seed
+*.pid.lock
+
+# Optional: Ignore minified libraries if you want to track them separately
+# Uncomment the lines below if you prefer to track library versions in package.json
+# libs/*.min.js
+# libs/*.min.css
+
+# IDE specific
+.project
+.classpath
+.settings/
+.loadpath
+.buildpath
+
+# macOS
+.AppleDouble
+.LSOverride
 
 # Windows
-Thumbs.db
-Thumbs.db:encryptable
-ehthumbs.db
-ehthumbs_vista.db
 Desktop.ini
 $RECYCLE.BIN/
 
 # Linux
 .directory
-*~
-.fuse_hidden*
-.nfs*
+.Trash-*
 
-# Editor and IDE Configuration
-# VSCode
-.vscode/
-*.code-workspace
-
-# JetBrains IDEs (WebStorm, IntelliJ, etc.)
-.idea/
-*.iml
-*.iws
-
-# Sublime Text
-*.sublime-project
-*.sublime-workspace
-
-# Vim
-[._]*.s[a-v][a-z]
-[._]*.sw[a-p]
-[._]s[a-rt-v][a-z]
-[._]ss[a-gi-z]
-[._]sw[a-p]
-*.swp
-*.swo
-
-# Emacs
+# Temporary files from various editors
+.*.kate-swp
+.*.sw?
 *~
 \#*\#
-/.emacs.desktop
-/.emacs.desktop.lock
-auto-save-list
-tramp
 .\#*
-
-# Logs and Temporary Files
-*.log
-*.tmp
-*.temp
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# User-Generated Data Files
-# Conversation data files uploaded by users (exclude from root only)
-/*.json
-# But keep example files
-!examples/**/*.json
-
-# Exported Files and Archives
-exports/
-*.zip
-*.tar.gz
-downloads/
-
-# Node.js (future-proofing)
-node_modules/
-npm-debug.log
-yarn-error.log
-package-lock.json
-yarn.lock
-
-# Build Output (future-proofing)
-dist/
-build/
-out/
-.cache/
-
-# Environment Variables
-.env
-.env.local
-.env.*.local
-
-# Testing
-coverage/
-*.test.js.snap
-.nyc_output/
-
-# Misc
-*.bak
-*.backup
-*.old
-.sass-cache/
-task_docs/

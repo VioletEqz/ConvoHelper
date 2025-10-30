@@ -363,17 +363,23 @@ const UI = {
             this.renderWordCloud(personName, data);
         }
         
-        // Render calendar heatmap
-        const calendarContainer = document.getElementById('viz-calendar-container');
-        if (calendarContainer && VizCalendar) {
-            VizCalendar.render(calendarContainer, personName, { byPerson: data });
-        }
-        
-        // Render conversation flow
-        const flowContainer = document.getElementById('viz-flow-container');
-        if (flowContainer && VizFlow) {
-            VizFlow.render(flowContainer, personName, { byPerson: data });
-        }
+        // Delay rendering of visualizations to ensure containers are fully visible
+        // This fixes the "invalid container dimensions" issue
+        setTimeout(() => {
+            // Render calendar heatmap
+            const calendarContainer = document.getElementById('viz-calendar-container');
+            if (calendarContainer && VizCalendar) {
+                console.log('Rendering calendar, container width:', calendarContainer.clientWidth);
+                VizCalendar.render(calendarContainer, personName, { byPerson: data });
+            }
+            
+            // Render conversation flow
+            const flowContainer = document.getElementById('viz-flow-container');
+            if (flowContainer && VizFlow) {
+                console.log('Rendering flow, container width:', flowContainer.clientWidth);
+                VizFlow.render(flowContainer, personName, { byPerson: data });
+            }
+        }, 100);
     },
     
     /**

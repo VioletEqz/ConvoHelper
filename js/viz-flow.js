@@ -23,18 +23,26 @@ const VizFlow = {
             return;
         }
         
-        // Prepare flow data
-        const flowData = this.prepareFlowData(personData.messages, data.userIdentity);
+        // Prepare flow data - get userIdentity from window.appData
+        const userIdentity = window.appData?.userIdentity || data.userIdentity;
+        const flowData = this.prepareFlowData(personData.messages, userIdentity);
         
         if (flowData.nodes.length === 0 || flowData.links.length === 0) {
             container.innerHTML = '<div class="no-data">Not enough data to create flow diagram</div>';
             return;
         }
         
-        // Create SVG
+        // Create SVG with fallback dimensions
         const margin = { top: 20, right: 20, bottom: 20, left: 20 };
-        const width = container.clientWidth - margin.left - margin.right;
+        const containerWidth = container.clientWidth || 800;
+        const width = Math.max(containerWidth - margin.left - margin.right, 400);
         const height = 400 - margin.top - margin.bottom;
+        
+        // Verify dimensions are valid
+        if (!width || width <= 0 || isNaN(width)) {
+            container.innerHTML = '<div class="no-data">Unable to render flow: invalid container dimensions</div>';
+            return;
+        }
         
         const svg = d3.select(container)
             .append('svg')
@@ -67,7 +75,7 @@ const VizFlow = {
         const flows = {};
         
         messages.forEach(msg => {
-            const date = new Date(msg.timestamp_ms);
+            const date = new Date(msg.timestamp);
             const hour = date.getHours();
             const day = date.getDay();
             
@@ -212,7 +220,7 @@ const VizFlow = {
         // Get max value for opacity scaling
         const maxValue = d3.max(aggregatedLinks, d => d.value) || 1;
         
-        // Draw links
+        // Draw links (render first so they appear behind nodes)
         const linkGroup = svg.append('g').attr('class', 'links');
         
         aggregatedLinks.forEach(link => {
@@ -221,7 +229,12 @@ const VizFlow = {
             
             if (!sourcePos || !targetPos) return;
             
-            const opacity = 0.2 + (link.value / maxValue) * 0.6;
+            // Skip links with no data
+            if (link.value === 0) return;
+            
+            // Calculate opacity and width based on value
+            const opacity = 0.3 + (link.value / maxValue) * 0.5;
+            const strokeWidth = 3 + (link.value / maxValue) * 12;
             
             // Create curved path
             const path = d3.path();
@@ -234,18 +247,51 @@ const VizFlow = {
             path.moveTo(x1, y1);
             path.bezierCurveTo(midX, y1, midX, y2, x2, y2);
             
-            linkGroup.append('path')
+            // Use hardcoded color for better compatibility
+            const linkColor = '#667eea'; // Purple color
+            
+            const linkPath = linkGroup.append('path')
                 .attr('d', path.toString())
                 .attr('class', 'flow-link')
-                .attr('stroke', getComputedStyle(document.documentElement).getPropertyValue('--color-primary'))
-                .attr('stroke-width', 2 + (link.value / maxValue) * 6)
+                .attr('stroke', linkColor)
+                .attr('stroke-width', strokeWidth)
                 .attr('stroke-opacity', opacity)
                 .attr('fill', 'none')
-                .append('title')
-                .text(`${link.value} messages`);
+                .attr('stroke-linecap', 'round')
+                .style('cursor', 'pointer');
+            
+            // Add tooltip
+            linkPath.append('title')
+                .text(`${link.value.toLocaleString()} messages`);
+            
+            // Add hover effect
+            linkPath.on('mouseover', function() {
+                d3.select(this)
+                    .attr('stroke', '#f093fb') // Brighter pink on hover
+                    .attr('stroke-opacity', Math.min(opacity + 0.3, 1))
+                    .attr('stroke-width', strokeWidth + 2);
+            })
+            .on('mouseout', function() {
+                d3.select(this)
+                    .attr('stroke', linkColor)
+                    .attr('stroke-opacity', opacity)
+                    .attr('stroke-width', strokeWidth);
+            });
+            
+            // Debug logging
+            if (aggregatedLinks.indexOf(link) === 0) {
+                console.log('First link rendered:', {
+                    source: link.source,
+                    target: link.target,
+                    value: link.value,
+                    strokeWidth,
+                    opacity,
+                    path: path.toString()
+                });
+            }
         });
         
-        // Draw nodes
+        // Draw nodes (render after links so they appear on top)
         const nodeGroup = svg.append('g').attr('class', 'nodes');
         
         data.nodes.forEach(node => {
@@ -253,15 +299,19 @@ const VizFlow = {
             if (!pos) return;
             
             const nodeG = nodeGroup.append('g')
-                .attr('transform', `translate(${pos.x - pos.width / 2},${pos.y})`);
+                .attr('transform', `translate(${pos.x - pos.width / 2},${pos.y})`)
+                .style('cursor', 'pointer');
             
-            // Node rectangle
+            // Node rectangle with shadow
             nodeG.append('rect')
                 .attr('class', 'flow-node')
                 .attr('width', pos.width)
                 .attr('height', pos.height)
                 .attr('rx', 8)
-                .attr('fill', this.getNodeColor(node.type));
+                .attr('fill', this.getNodeColor(node.type))
+                .attr('stroke', '#fff')
+                .attr('stroke-width', 2)
+                .style('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))');
             
             // Node label
             nodeG.append('text')
@@ -269,8 +319,27 @@ const VizFlow = {
                 .attr('x', pos.width / 2)
                 .attr('y', pos.height / 2)
                 .attr('dy', '0.35em')
+                .attr('text-anchor', 'middle')
+                .attr('fill', '#fff')
+                .attr('font-size', '14px')
+                .attr('font-weight', 'bold')
                 .text(node.name);
+            
+            // Add hover effect
+            nodeG.on('mouseover', function() {
+                d3.select(this).select('rect')
+                    .attr('stroke-width', 3)
+                    .style('filter', 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))');
+            })
+            .on('mouseout', function() {
+                d3.select(this).select('rect')
+                    .attr('stroke-width', 2)
+                    .style('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))');
+            });
         });
+        
+        // Add legend
+        this.addFlowLegend(svg, width, height);
     },
     
     /**
@@ -278,11 +347,44 @@ const VizFlow = {
      */
     getNodeColor(type) {
         const colors = {
-            day: getComputedStyle(document.documentElement).getPropertyValue('--color-primary'),
-            time: getComputedStyle(document.documentElement).getPropertyValue('--color-secondary'),
-            sender: getComputedStyle(document.documentElement).getPropertyValue('--color-success')
+            day: '#667eea',      // Purple
+            time: '#f093fb',     // Pink
+            sender: '#4facfe'    // Blue
         };
         return colors[type] || colors.day;
+    },
+    
+    /**
+     * Add legend to flow diagram
+     */
+    addFlowLegend(svg, width, height) {
+        const legendData = [
+            { label: 'Day Type', color: '#667eea' },
+            { label: 'Time Period', color: '#f093fb' },
+            { label: 'Sender', color: '#4facfe' }
+        ];
+        
+        const legend = svg.append('g')
+            .attr('class', 'flow-legend')
+            .attr('transform', `translate(10, ${height - 80})`);
+        
+        legendData.forEach((item, i) => {
+            const legendItem = legend.append('g')
+                .attr('transform', `translate(0, ${i * 25})`);
+            
+            legendItem.append('rect')
+                .attr('width', 20)
+                .attr('height', 20)
+                .attr('rx', 4)
+                .attr('fill', item.color);
+            
+            legendItem.append('text')
+                .attr('x', 30)
+                .attr('y', 15)
+                .attr('fill', 'var(--text-primary)')
+                .attr('font-size', '12px')
+                .text(item.label);
+        });
     }
 };
 

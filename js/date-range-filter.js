@@ -71,13 +71,19 @@ const DateRangeFilter = {
         // Re-render current view with new timezone
         if (window.currentPerson) {
             // Re-render individual stats
-            if (typeof StatsIndividual !== 'undefined') {
-                StatsIndividual.renderStats(window.currentPerson);
+            if (typeof StatsIndividual !== 'undefined' && window.appData && window.appData.processed) {
+                const personData = window.appData.processed[window.currentPerson];
+                const stats = Stats.generatePersonStats(personData, window.appData.overviewStats.totalMessages);
+                const enhancedStats = StatsIndividual.generateEnhancedPersonStats(personData, window.appData.overviewStats.totalMessages);
+                UI.populateEnhancedIndividual(enhancedStats);
             }
         } else {
             // Re-render overview stats
-            if (typeof StatsGeneral !== 'undefined') {
-                StatsGeneral.renderStats();
+            if (typeof StatsGeneral !== 'undefined' && window.appData && window.appData.processed) {
+                const enhanced = StatsGeneral.generateEnhancedOverviewStats(window.appData.processed);
+                window.appData.enhancedOverviewStats = enhanced;
+                UI.populateOverview(window.appData.overviewStats);
+                UI.populateEnhancedOverview(enhanced);
             }
         }
         
@@ -290,12 +296,18 @@ const DateRangeFilter = {
      */
     refreshStats() {
         if (window.currentPerson) {
-            if (typeof StatsIndividual !== 'undefined') {
-                StatsIndividual.renderStats(window.currentPerson);
+            if (typeof StatsIndividual !== 'undefined' && window.appData && window.appData.processed) {
+                const personData = window.appData.processed[window.currentPerson];
+                const stats = Stats.generatePersonStats(personData, window.appData.overviewStats.totalMessages);
+                const enhancedStats = StatsIndividual.generateEnhancedPersonStats(personData, window.appData.overviewStats.totalMessages);
+                UI.populateEnhancedIndividual(enhancedStats);
             }
         } else {
-            if (typeof StatsGeneral !== 'undefined') {
-                StatsGeneral.renderStats();
+            if (typeof StatsGeneral !== 'undefined' && window.appData && window.appData.processed) {
+                const enhanced = StatsGeneral.generateEnhancedOverviewStats(window.appData.processed);
+                window.appData.enhancedOverviewStats = enhanced;
+                UI.populateOverview(window.appData.overviewStats);
+                UI.populateEnhancedOverview(enhanced);
             }
         }
     },

@@ -42,7 +42,8 @@ const Exporter = {
         md += `**Date Range**: ${Parser.formatDateRange(dateRange.start, dateRange.end)}\n\n`;
         md += `---\n\n`;
         md += `## Messages\n\n`;
-        
+
+        // Account for timezone offset...
         // Group messages by date
         const byDate = {};
         for (const msg of messages) {
@@ -52,7 +53,6 @@ const Exporter = {
             }
             byDate[dateKey].push(msg);
         }
-        
         // Write messages grouped by date
         for (const date in byDate) {
             md += `### ${date}\n\n`;

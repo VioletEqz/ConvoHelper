@@ -119,7 +119,12 @@ const Parser = {
      * @returns {Object} Parsed message with additional fields
      */
     parseMessage(message) {
+        // Offset, in hours
+        let timezoneOffset = window.convoHelper.timezoneOffset || 0;
         const date = new Date(message.Date.replace(' ', 'T'));
+        // Apply timezone offset
+        date.setHours(date.getHours() + timezoneOffset);
+
         const { processedContent, messageType } = this.processContent(message.Content);
         return {
             date: date,

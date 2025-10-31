@@ -13,6 +13,11 @@ window.appData = {
     allSenders: []
 };
 
+// Initialize ConvoHelper object for timezone handling
+window.convoHelper = window.convoHelper || {
+    timezoneOffset: 0  // Default to UTC, user can override
+};
+
 // Initialize application
 document.addEventListener('DOMContentLoaded', () => {
     initializeApp();
@@ -27,6 +32,9 @@ function initializeApp() {
         document.getElementById('loading-screen').style.display = 'none';
         document.getElementById('main-app').classList.remove('hidden');
     }, 1000);
+    
+    // Set up timezone selector
+    setupTimezoneSelector();
     
     // Set up file upload
     setupFileUpload();
@@ -258,9 +266,79 @@ function setupFileUpload() {
 }
 
 /**
+ * Set up timezone selector
+ */
+function setupTimezoneSelector() {
+    const timezoneSelect = document.getElementById('timezone-select');
+    
+    // Common timezone options
+    const timezones = [
+        { value: 0, label: 'UTC (GMT+0)' },
+        { value: -12, label: 'Baker Island (GMT-12)' },
+        { value: -11, label: 'Samoa (GMT-11)' },
+        { value: -10, label: 'Hawaii (GMT-10)' },
+        { value: -9, label: 'Alaska (GMT-9)' },
+        { value: -8, label: 'Pacific Time (GMT-8)' },
+        { value: -7, label: 'Mountain Time (GMT-7)' },
+        { value: -6, label: 'Central Time (GMT-6)' },
+        { value: -5, label: 'Eastern Time (GMT-5)' },
+        { value: -4, label: 'Atlantic Time (GMT-4)' },
+        { value: -3, label: 'Brasília (GMT-3)' },
+        { value: -2, label: 'South Georgia (GMT-2)' },
+        { value: -1, label: 'Azores (GMT-1)' },
+        { value: 1, label: 'Central European (GMT+1)' },
+        { value: 2, label: 'Eastern European (GMT+2)' },
+        { value: 3, label: 'Moscow (GMT+3)' },
+        { value: 4, label: 'Gulf Standard (GMT+4)' },
+        { value: 5, label: 'Pakistan (GMT+5)' },
+        { value: 6, label: 'Bangladesh (GMT+6)' },
+        { value: 7, label: 'Indochina/Vietnam (GMT+7)' },
+        { value: 8, label: 'China/Singapore (GMT+8)' },
+        { value: 9, label: 'Japan/Korea (GMT+9)' },
+        { value: 10, label: 'Australia East (GMT+10)' },
+        { value: 11, label: 'Solomon Islands (GMT+11)' },
+        { value: 12, label: 'New Zealand (GMT+12)' }
+    ];
+    
+    // Clear existing options
+    timezoneSelect.innerHTML = '';
+    
+    // Add timezone options
+    timezones.forEach(tz => {
+        const option = document.createElement('option');
+        option.value = tz.value;
+        option.textContent = tz.label;
+        timezoneSelect.appendChild(option);
+    });
+    
+    // Try to auto-detect user's timezone
+    try {
+        const userOffset = -new Date().getTimezoneOffset() / 60; // Convert to hours and flip sign
+        const matchingTimezone = timezones.find(tz => tz.value === userOffset);
+        
+        if (matchingTimezone) {
+            timezoneSelect.value = userOffset;
+            window.convoHelper.timezoneOffset = userOffset;
+            console.log(`Auto-detected timezone: GMT${userOffset >= 0 ? '+' : ''}${userOffset}`);
+        }
+    } catch (error) {
+        console.warn('Could not auto-detect timezone:', error);
+    }
+}
+
+/**
  * Set up event listeners
  */
 function setupEventListeners() {
+    // Timezone selector
+    document.getElementById('timezone-select').addEventListener('change', (e) => {
+        const offset = parseInt(e.target.value);
+        window.convoHelper.timezoneOffset = offset;
+        const sign = offset >= 0 ? '+' : '';
+        UI.showToast(`Timezone set to GMT${sign}${offset}`);
+        console.log('Timezone offset updated:', offset);
+    });
+    
     // Identity selector
     document.getElementById('identity-select').addEventListener('change', (e) => {
         window.appData.userIdentity = e.target.value;

@@ -119,8 +119,17 @@ const Parser = {
      * @returns {Object} Parsed message with additional fields
      */
     parseMessage(message) {
-        // Offset, in hours
-        let timezoneOffset = window.convoHelper.timezoneOffset || 0;
+        // Offset, in hours - safe access with multiple fallbacks
+        let timezoneOffset = 0;
+        try {
+            timezoneOffset = window.convoHelper?.timezoneOffset || 
+                            window.appData?.timezoneOffset || 
+                            0;
+        } catch (error) {
+            console.warn('Unable to access timezone offset, using 0:', error);
+            timezoneOffset = 0;
+        }
+        
         const date = new Date(message.Date.replace(' ', 'T'));
         // Apply timezone offset
         date.setHours(date.getHours() + timezoneOffset);
